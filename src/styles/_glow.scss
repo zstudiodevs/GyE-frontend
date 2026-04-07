@@ -1,0 +1,159 @@
+// ─── Glow animations & interactive-element focus/hover effects ───────────────
+//
+// Uses --glow-color and --glow-color-strong CSS vars defined in styles.scss.
+// Both variables change automatically between light and dark themes.
+
+// ── Keyframes ─────────────────────────────────────────────────────────────────
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 6px 1px var(--glow-color);
+  }
+  50% {
+    box-shadow: 0 0 18px 5px var(--glow-color-strong);
+  }
+}
+
+@keyframes glow-text-pulse {
+  0%,
+  100% {
+    text-shadow: 0 0 6px var(--glow-color);
+  }
+  50% {
+    text-shadow: 0 0 14px var(--glow-color-strong);
+  }
+}
+
+// ── Shared interaction base ───────────────────────────────────────────────────
+
+%glow-transition {
+  transition:
+    box-shadow 0.25s ease,
+    transform 0.18s ease,
+    filter 0.25s ease;
+}
+
+// ── Buttons ───────────────────────────────────────────────────────────────────
+
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-icon-button,
+.mat-mdc-fab,
+.mat-mdc-mini-fab {
+  @extend %glow-transition;
+
+  &:hover:not([disabled]) {
+    box-shadow: 0 0 14px 3px var(--glow-color) !important;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible:not([disabled]) {
+    box-shadow:
+      0 0 0 3px var(--mat-sys-surface),
+      0 0 0 5px var(--mat-sys-primary),
+      0 0 20px 4px var(--glow-color) !important;
+    outline: none;
+  }
+}
+
+// ── Form fields ───────────────────────────────────────────────────────────────
+
+.mat-mdc-form-field {
+  transition: filter 0.25s ease;
+
+  &:focus-within {
+    filter: drop-shadow(0 0 6px var(--glow-color));
+  }
+}
+
+// ── Cards ─────────────────────────────────────────────────────────────────────
+
+.mat-mdc-card {
+  @extend %glow-transition;
+
+  &:hover {
+    box-shadow: 0 4px 24px 0 var(--glow-color) !important;
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    box-shadow:
+      0 0 0 3px var(--mat-sys-primary),
+      0 0 20px 4px var(--glow-color) !important;
+    outline: none;
+  }
+}
+
+// ── List / nav items ──────────────────────────────────────────────────────────
+
+.mat-mdc-list-item {
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    box-shadow: inset 3px 0 0 var(--mat-sys-primary);
+    filter: drop-shadow(0 0 5px var(--glow-color));
+  }
+}
+
+// ── Chips ─────────────────────────────────────────────────────────────────────
+
+.mat-mdc-chip {
+  transition: box-shadow 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    box-shadow: 0 0 12px 2px var(--glow-color) !important;
+  }
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+
+.mat-mdc-tab {
+  transition: text-shadow 0.2s ease;
+
+  &.mdc-tab--active .mdc-tab__text-label,
+  &:hover .mdc-tab__text-label {
+    text-shadow: 0 0 8px var(--glow-color);
+  }
+}
+
+// ── Menu items ────────────────────────────────────────────────────────────────
+
+.mat-mdc-menu-item {
+  transition:
+    background-color 0.15s ease,
+    filter 0.15s ease;
+
+  &:hover,
+  &:focus-visible {
+    filter: drop-shadow(0 0 4px var(--glow-color));
+  }
+}
+
+// ─── Utility classes (re-usable anywhere) ────────────────────────────────────
+
+.glow {
+  box-shadow: 0 0 10px 3px var(--glow-color);
+}
+
+.glow-strong {
+  box-shadow: 0 0 20px 6px var(--glow-color-strong);
+}
+
+.glow-pulse {
+  animation: glow-pulse 2.2s ease-in-out infinite;
+}
+
+.glow-text {
+  text-shadow: 0 0 8px var(--glow-color);
+}
+
+.glow-text-pulse {
+  animation: glow-text-pulse 2.2s ease-in-out infinite;
+}

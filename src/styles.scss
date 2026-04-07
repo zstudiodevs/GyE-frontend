@@ -1,0 +1,56 @@
+@use '@angular/material' as mat;
+@use './styles/glow';
+
+// ─── Light theme (default) ────────────────────────────────────────────────────
+// Primary: azure (celeste / sky-blue). Tertiary removed — neutrals (gray/white/
+// black) are generated automatically by M3 from the primary hue.
+html {
+  height: 100%;
+
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+
+  // Glow colours for light mode — soft sky-blue
+  --glow-color: rgba(41, 121, 255, 0.35);
+  --glow-color-strong: rgba(41, 121, 255, 0.65);
+}
+
+// ─── Dark theme (class toggled by ThemeService) ───────────────────────────────
+html.dark-theme {
+  @include mat.theme(
+    (
+      color: (
+        theme-type: dark,
+        primary: mat.$azure-palette,
+      ),
+    )
+  );
+
+  // Neon-electric sky-blue glow for dark mode
+  --glow-color: rgba(100, 181, 255, 0.5);
+  --glow-color-strong: rgba(100, 181, 255, 0.88);
+}
+
+// ─── Body base styles ─────────────────────────────────────────────────────────
+body {
+  color-scheme: light;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+html.dark-theme body {
+  color-scheme: dark;
+}

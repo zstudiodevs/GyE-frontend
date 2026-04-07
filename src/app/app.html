@@ -1,0 +1,131 @@
+<!-- Theme Demo Page -->
+<mat-toolbar color="primary">
+  <span>GyE – Theme Demo</span>
+  <span class="spacer"></span>
+  <button mat-icon-button (click)="themeService.toggle()" [attr.aria-label]="themeService.isDark() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+    <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="demo-container">
+
+  <!-- Buttons -->
+  <section class="demo-section">
+    <h2 class="demo-title">Botones</h2>
+    <div class="demo-row">
+      <button mat-flat-button color="primary">Flat</button>
+      <button mat-raised-button color="primary">Raised</button>
+      <button mat-stroked-button color="primary">Stroked</button>
+      <button mat-icon-button color="primary"><mat-icon>star</mat-icon></button>
+      <button mat-mini-fab color="primary"><mat-icon>add</mat-icon></button>
+      <button mat-fab color="primary"><mat-icon>favorite</mat-icon></button>
+    </div>
+    <div class="demo-row">
+      <span class="glow-pulse demo-badge">Glow Pulse</span>
+      <span class="glow-text-pulse demo-badge">Text Pulse</span>
+      <span class="glow demo-badge">Glow</span>
+      <span class="glow-strong demo-badge">Glow Strong</span>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <section class="demo-section">
+    <h2 class="demo-title">Cards</h2>
+    <div class="demo-row demo-row--wrap">
+      <mat-card class="demo-card">
+        <mat-card-header>
+          <mat-card-title>Título de tarjeta</mat-card-title>
+          <mat-card-subtitle>Subtítulo</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Pasá el mouse o hacé foco sobre la tarjeta para ver el efecto glow.</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary">Acción</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card class="demo-card">
+        <mat-card-header>
+          <mat-card-title>Segunda tarjeta</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Paleta azure — tonos de celeste, gris y blanco/negro según el tema.</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-stroked-button color="primary">Ver más</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Form fields -->
+  <section class="demo-section">
+    <h2 class="demo-title">Formularios</h2>
+    <div class="demo-row demo-row--wrap">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Juan Pérez" />
+        <mat-icon matPrefix>person</mat-icon>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" placeholder="juan@example.com" />
+        <mat-icon matPrefix>email</mat-icon>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" />
+        <mat-icon matSuffix>visibility_off</mat-icon>
+      </mat-form-field>
+    </div>
+  </section>
+
+  <!-- Chips -->
+  <section class="demo-section">
+    <h2 class="demo-title">Chips</h2>
+    <div class="demo-row">
+      <mat-chip-set>
+        <mat-chip>Celeste</mat-chip>
+        <mat-chip>Blanco</mat-chip>
+        <mat-chip>Negro</mat-chip>
+        <mat-chip>Gris</mat-chip>
+        <mat-chip highlighted>Destacado</mat-chip>
+      </mat-chip-set>
+    </div>
+  </section>
+
+  <!-- List -->
+  <section class="demo-section">
+    <h2 class="demo-title">Lista</h2>
+    <mat-list class="demo-list">
+      @for (item of menuItems(); track item) {
+        <mat-list-item>
+          <mat-icon matListItemIcon>chevron_right</mat-icon>
+          <span matListItemTitle>{{ item }}</span>
+        </mat-list-item>
+      }
+    </mat-list>
+  </section>
+
+  <!-- Theme toggle card -->
+  <section class="demo-section">
+    <h2 class="demo-title">Tema activo</h2>
+    <mat-card class="demo-card demo-card--theme">
+      <mat-card-content>
+        <div class="theme-status">
+          <mat-icon>{{ themeService.isDark() ? 'nights_stay' : 'wb_sunny' }}</mat-icon>
+          <span>Modo {{ themeService.isDark() ? 'oscuro' : 'claro' }}</span>
+          <mat-slide-toggle
+            [checked]="themeService.isDark()"
+            (change)="themeService.toggle()"
+            color="primary">
+          </mat-slide-toggle>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+</div>
+
+<router-outlet />
