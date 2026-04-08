@@ -2,6 +2,40 @@
 
 Angular 21.2 · Angular Material 21.2 · Zoneless · Signals · Standalone
 
+## Dominio de la aplicación
+
+**Club Gimnasia y Esgrima de Concepción del Uruguay**, Entre Ríos, Argentina.
+
+La aplicación digitaliza el proceso de reserva de turnos para jugar **Pelota Paleta**, reemplazando el sistema actual basado en un grupo de WhatsApp. El objetivo es ofrecer un proceso simple, directo e igualitario.
+
+> La mayoría de los usuarios son socios mayores de 45 años. La UX debe priorizar **pocos pasos**, **textos descriptivos** y **interacciones claras**. Mobile-first es obligatorio.
+
+### Actores y roles
+
+El sistema implementa **RBAC** (Role-Based Access Control). Los roles y permisos son gestionados desde el panel de administración. Roles base conocidos:
+
+| Rol | Acceso |
+|-----|--------|
+| **Socio** | Reservar turnos, invitar socios, ver historial propio, cancelar (hasta 1h antes) |
+| **Administrador** | Todo lo del socio + vista global de reservas, cancelar cualquier reserva, gestionar disponibilidad de canchas/horarios, dar de alta/baja socios, gestionar roles y permisos |
+
+### Reglas de negocio
+
+- **Autenticación**: Email y contraseña. JWT gestionado desde el backend.
+- **Cancha y horarios**: Actualmente 1 cancha, disponible los **domingos a las 22 hs**. La configuración de disponibilidad debe ser flexible para soportar más canchas/horarios en el futuro.
+- **Capacidad por turno**: 2 o 4 jugadores.
+- **Creación de turno**: El creador elige la modalidad del turno:
+  - **Cerrado con invitaciones**: Invita activamente a socios buscando por nombre, apellido, email o número de socio (todos campos string).
+  - **Abierto**: El turno es visible para todos los socios; cualquiera puede solicitar unirse.
+  - **Combinado**: Ambas opciones activas simultáneamente.
+- **Cancelación**: Permitida hasta **1 hora antes** del turno. No se puede cancelar después de ese límite.
+- **Historial**: Los socios ven sus reservas pasadas y futuras.
+- **Notificaciones**: No incluidas en la fase inicial; planificadas para una iteración futura.
+
+### Backend
+
+El backend está en desarrollo paralelo e implementa RBAC. El contrato de API se define iterativamente. El frontend usa mocks/stubs hasta que los endpoints estén disponibles. Toda llamada HTTP desde servicios retorna `Observable`; se usa `toSignal()` en el componente para convertir a señales.
+
 ## Stack
 
 | Layer | Technology |

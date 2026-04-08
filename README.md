@@ -1,59 +1,56 @@
-# Angular
+# GyE Pelota Paleta – Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.5.
+Aplicación web para el club **Gimnasia y Esgrima de Concepción del Uruguay**, Entre Ríos, Argentina.
 
-## Development server
+## Objetivo
 
-To start a local development server, run:
+Digitalizar el proceso de reserva de turnos para jugar **Pelota Paleta**, reemplazando el sistema informal de WhatsApp. La app permite a los socios reservar la cancha de forma simple, transparente e igualitaria.
 
-```bash
-ng serve
-```
+## Contexto
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Actualmente los socios coordinan turnos por un grupo de WhatsApp, lo que genera un proceso engorroso, opaco e inequitativo (dependencia del administrador del grupo, problemas de conectividad, posibilidad de favoritismos). Esta app resuelve ese problema con un sistema centralizado, justo y auditable.
 
-## Code scaffolding
+## Funcionalidades
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Para socios
 
-```bash
-ng generate component component-name
-```
+- **Autenticación**: Login con email y contraseña.
+- **Reserva de turnos**: Reservar la cancha disponible (actualmente domingos a las 22 hs; configurable).
+- **Capacidad por turno**: 2 o 4 jugadores.
+- **Invitar socios**: El creador invita a otros socios buscando por nombre, apellido, email o número de socio.
+- **Turnos abiertos**: El creador puede publicar el turno como abierto para que cualquier socio solicite unirse.
+- **Cancelación**: Posible hasta 1 hora antes del inicio del turno.
+- **Historial**: Vista de reserves pasadas y futuras propias.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Para administradores
 
-```bash
-ng generate --help
-```
+- **Vista global de reservas**: Ver y cancelar cualquier reserva.
+- **Gestión de disponibilidad**: Configurar canchas, días y horarios habilitados.
+- **Gestión de usuarios**: Alta y baja de socios.
+- **RBAC**: Panel de control para crear roles personalizados con permisos configurables.
 
-## Building
+## Stack técnico
 
-To build the project run:
+| Layer | Technology |
+|-------|-----------|
+| Framework | Angular `^21.2.0` |
+| UI library | Angular Material `^21.2.5` |
+| Change detection | Zoneless (`provideZonelessChangeDetection()`) |
+| Reactivity | Angular Signals |
+| Styling | SCSS + Material 3 (azure palette, light/dark) |
+| Backend | REST API en desarrollo (contrato coordinado iterativamente) |
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+## Comandos de desarrollo
 
 ```bash
-ng e2e
+npm install          # Instalar dependencias
+ng serve             # Servidor dev → http://localhost:4200
+ng build             # Build de producción
+ng test              # Tests unitarios (Vitest)
+ng lint              # Linting
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Recursos
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- [Angular CLI](https://angular.dev/tools/cli)
+- [Angular Material](https://material.angular.io/)
