@@ -5,7 +5,7 @@ import type { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import type { ApiResponse, PaginationMeta } from '../models/api.models';
-import type { Role, CreateRoleRequest, UpdateRoleRequest } from '../models/role.models';
+import type { Role, RoleWithPermissions, CreateRoleRequest, UpdateRoleRequest } from '../models/role.models';
 
 export interface RolePage {
   roles: Role[];
@@ -31,32 +31,10 @@ export class RoleService {
     );
   }
 
-  /** GET /api/Roles/{id} — Obtiene los datos básicos de un rol. */
-  getRole(id: string): Observable<Role> {
-    return this.http.get<ApiResponse<Role>>(`${this.baseUrl}/api/Roles/${id}`).pipe(
+  /** GET /api/Roles/{id} — Obtiene un rol con todos sus permisos asignados. */
+  getRole(id: string): Observable<RoleWithPermissions> {
+    return this.http.get<ApiResponse<RoleWithPermissions>>(`${this.baseUrl}/api/Roles/${id}/permissions`).pipe(
       map(r => r.data!),
-    );
-  }
-
-  /**
-   * GET /api/Roles/{id}/permissions — Devuelve los IDs de los permisos asignados al rol.
-   * Maneja todas las formas posibles de respuesta del backend.
-   */
-  getRolePermissionIds(id: string): Observable<string[]> {
-    return this.http.get<any>(`${this.baseUrl}/api/Roles/${id}/permissions`).pipe(
-      map((r): string[] => {
-        // Normalizar a array plano sin importar el wrapper
-        let items: any[];
-        if (Array.isArray(r)) items = r;
-        else if (Array.isArray(r?.data)) items = r.data;
-        else if (Array.isArray(r?.data?.items)) items = r.data.items;
-        else items = [];
-
-        // Extraer el ID — el campo puede llamarse id, permissionId, etc.
-        return items
-          .map((p: any) => p?.id ?? p?.permissionId ?? p?.Id ?? p?.PermissionId)
-          .filter((id): id is string => typeof id === 'string' && id.length > 0);
-      }),
     );
   }
 

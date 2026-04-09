@@ -2,12 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, forkJoin, of } from 'rxjs';
+import { catchError, EMPTY, switchMap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -45,6 +47,7 @@ export class RoleEditComponent {
   private readonly roleService = inject(RoleService);
   private readonly permissionService = inject(PermissionService);
   private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly roleId = this.route.snapshot.paramMap.get('id');
   readonly isEditing = !!this.roleId;
@@ -59,12 +62,19 @@ export class RoleEditComponent {
   readonly featureNames = computed(() => Object.keys(this.permissionsByFeature()).sort());
   readonly selectedPermissionIds = signal<Set<string>>(new Set());
 
+  /** Snapshot inmutable del estado inicial — se usa para detectar cambios en permisos. */
+  private initialPermissionIds = new Set<string>();
+
   readonly loadingData = signal(true);
   readonly loadError = signal<string | null>(null);
   readonly saving = signal(false);
   readonly saveError = signal<string | null>(null);
 
-  /** Conteo de seleccionados y total por feature. */
+  /** Señal que se actualiza cada vez que el formulario cambia — permite que hasChanges sea computed. */
+  private readonly formValues = toSignal(this.form.valueChanges, { initialValue: this.form.value });
+
+  // ── Computed signals ──────────────────────────────────────────────────────
+
   readonly featureStats = computed(() => {
     const stats: Record<string, { total: number; selected: number }> = {};
     for (const [feature, perms] of Object.entries(this.permissionsByFeature())) {
@@ -78,44 +88,80 @@ export class RoleEditComponent {
     this.featureNames().reduce((sum, f) => sum + (this.featureStats()[f]?.selected ?? 0), 0)
   );
 
+  readonly hasPermissionChanges = computed(() => {
+    const current = this.selectedPermissionIds();
+    if (current.size !== this.initialPermissionIds.size) return true;
+    for (const id of current) {
+      if (!this.initialPermissionIds.has(id)) return true;
+    }
+    return false;
+  });
+
+  readonly hasChanges = computed(() => {
+    this.formValues(); // lectura para que el computed se invalide al cambiar el form
+    return this.form.dirty || this.hasPermissionChanges();
+  });
+
+  // ── Constructor ───────────────────────────────────────────────────────────
+
   constructor() {
-    const allPerms$ = this.permissionService.getPermissionsGroupedByFeature().pipe(
-      catchError(() => of(null)),
-    );
+    this.loadData();
+  }
 
-    const role$ = this.isEditing
-      ? this.roleService.getRole(this.roleId!).pipe(catchError(() => of(null)))
-      : of(null);
+  // ── Carga de datos ────────────────────────────────────────────────────────
 
-    const assignedIds$ = this.isEditing
-      ? this.roleService.getRolePermissionIds(this.roleId!).pipe(catchError(() => of([] as string[])))
-      : of([] as string[]);
-
-    forkJoin({ role: role$, allPerms: allPerms$, assignedIds: assignedIds$ })
-      .subscribe(({ role, allPerms, assignedIds }) => {
-        if (!allPerms) {
+  private loadData(): void {
+    if (!this.isEditing) {
+      // Creación: solo necesitamos la lista completa de permisos
+      this.permissionService.getPermissionsGroupedByFeature().pipe(
+        catchError(() => {
           this.loadError.set('No se pudieron cargar los permisos disponibles. Intentá de nuevo.');
           this.loadingData.set(false);
-          return;
-        }
-
-        if (this.isEditing && !role) {
-          this.loadError.set('No se pudieron cargar los datos del rol. Intentá de nuevo.');
-          this.loadingData.set(false);
-          return;
-        }
-
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe(allPerms => {
         this.permissionsByFeature.set(allPerms);
-
-        if (role) {
-          this.roleName.set(role.name);
-          this.form.patchValue({ name: role.name, description: role.description });
-          this.selectedPermissionIds.set(new Set(assignedIds));
-        }
-
         this.loadingData.set(false);
       });
+      return;
+    }
+
+    // Edición: 1) rol con sus permisos asignados → 2) todos los permisos del sistema
+    this.roleService.getRole(this.roleId!).pipe(
+      catchError(() => {
+        this.loadError.set('No se pudieron cargar los datos del rol. Intentá de nuevo.');
+        this.loadingData.set(false);
+        return EMPTY;
+      }),
+      switchMap(role => {
+        // Poblar formulario
+        this.roleName.set(role.name);
+        this.form.patchValue({ name: role.name, description: role.description });
+        this.form.markAsPristine();
+
+        // Guardar snapshot de IDs asignados
+        const assignedIds = (role.permissions ?? []).map(p => p.id);
+        this.initialPermissionIds = new Set(assignedIds);
+        this.selectedPermissionIds.set(new Set(assignedIds));
+
+        // Traer TODOS los permisos del sistema para construir la lista completa
+        return this.permissionService.getPermissionsGroupedByFeature().pipe(
+          catchError(() => {
+            this.loadError.set('No se pudieron cargar los permisos disponibles. Intentá de nuevo.');
+            this.loadingData.set(false);
+            return EMPTY;
+          }),
+        );
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(allPerms => {
+      this.permissionsByFeature.set(allPerms);
+      this.loadingData.set(false);
+    });
   }
+
+  // ── Helpers de estado ─────────────────────────────────────────────────────
 
   isPermissionSelected(permId: string): boolean {
     return this.selectedPermissionIds().has(permId);
@@ -130,6 +176,8 @@ export class RoleEditComponent {
     const s = this.featureStats()[feature];
     return !!s && s.selected > 0 && s.selected < s.total;
   }
+
+  // ── Mutaciones ────────────────────────────────────────────────────────────
 
   togglePermission(permId: string): void {
     this.selectedPermissionIds.update(set => {
@@ -151,6 +199,8 @@ export class RoleEditComponent {
       return next;
     });
   }
+
+  // ── Acciones ──────────────────────────────────────────────────────────────
 
   goBack(): void {
     this.router.navigate(['/admin/roles']);
@@ -182,12 +232,14 @@ export class RoleEditComponent {
       catchError(() => {
         this.saveError.set('No se pudieron guardar los cambios. Intentá de nuevo.');
         this.saving.set(false);
-        return of(null);
+        return EMPTY;
       }),
-    ).subscribe(result => {
-      if (result) {
-        this.router.navigate(['/admin/roles']);
-      }
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => {
+      // Actualizar snapshot → hasChanges vuelve a false antes de navegar
+      this.initialPermissionIds = new Set(permissionIds);
+      this.form.markAsPristine();
+      this.router.navigate(['/admin/roles']);
     });
   }
 }
