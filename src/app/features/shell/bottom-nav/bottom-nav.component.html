@@ -1,0 +1,45 @@
+<nav class="bottom-nav" aria-label="Navegación principal">
+
+  <a
+    class="nav-item"
+    routerLink="/reservas"
+    routerLinkActive="nav-item--active"
+    matRipple
+  >
+    <mat-icon>event_available</mat-icon>
+    <span class="nav-label">Reservas</span>
+  </a>
+
+  <a
+    class="nav-item"
+    routerLink="/mis-turnos"
+    routerLinkActive="nav-item--active"
+    matRipple
+  >
+    <mat-icon>history</mat-icon>
+    <span class="nav-label">Mis turnos</span>
+  </a>
+
+  @if (authStore.isAdmin()) {
+    <a
+      class="nav-item"
+      routerLink="/admin"
+      routerLinkActive="nav-item--active"
+      matRipple
+    >
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span class="nav-label">Admin</span>
+    </a>
+  }
+
+  <a
+    class="nav-item"
+    routerLink="/perfil"
+    routerLinkActive="nav-item--active"
+    matRipple
+  >
+    <mat-icon>person</mat-icon>
+    <span class="nav-label">Perfil</span>
+  </a>
+
+</nav>

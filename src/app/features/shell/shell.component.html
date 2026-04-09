@@ -1,0 +1,44 @@
+<div class="shell">
+
+  <mat-toolbar class="shell__toolbar">
+    <span class="shell__title">Club G y E</span>
+
+    <nav class="shell__desktop-nav" aria-label="Navegación principal">
+      <a mat-button routerLink="/reservas" routerLinkActive="shell__nav-link--active">
+        <mat-icon>event_available</mat-icon>
+        Reservas
+      </a>
+      <a mat-button routerLink="/mis-turnos" routerLinkActive="shell__nav-link--active">
+        <mat-icon>history</mat-icon>
+        Mis turnos
+      </a>
+      @if (authStore.isAdmin()) {
+        <a mat-button routerLink="/admin" routerLinkActive="shell__nav-link--active">
+          <mat-icon>admin_panel_settings</mat-icon>
+          Admin
+        </a>
+      }
+      <a mat-button routerLink="/perfil" routerLinkActive="shell__nav-link--active">
+        <mat-icon>person</mat-icon>
+        Perfil
+      </a>
+    </nav>
+
+    <span class="shell__spacer"></span>
+
+    <button
+      mat-icon-button
+      (click)="themeService.toggle()"
+      [attr.aria-label]="themeService.isDark() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+    >
+      <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <main class="shell__content">
+    <router-outlet />
+  </main>
+
+  <app-bottom-nav />
+
+</div>

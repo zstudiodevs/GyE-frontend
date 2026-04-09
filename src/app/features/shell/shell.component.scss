@@ -1,0 +1,52 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.shell__toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.shell__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.shell__desktop-nav {
+  display: none;
+  margin-left: 1.5rem;
+
+  @media (min-width: 768px) {
+    display: flex;
+    gap: 0.25rem;
+  }
+}
+
+.shell__nav-link--active {
+  background-color: var(--mat-sys-secondary-container) !important;
+  color: var(--mat-sys-on-secondary-container) !important;
+}
+
+.shell__spacer {
+  flex: 1;
+}
+
+.shell__content {
+  flex: 1;
+  padding-top: 64px;
+  padding-bottom: 72px;
+
+  @media (min-width: 768px) {
+    padding-bottom: 1.5rem;
+    max-width: 960px;
+    margin-inline: auto;
+    width: 100%;
+    padding-inline: 1.5rem;
+  }
+}
