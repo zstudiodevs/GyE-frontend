@@ -68,6 +68,27 @@ export class AuthStoreService {
     localStorage.removeItem(STORAGE_REFRESH_TOKEN_KEY);
   }
 
+  /**
+   * Actualiza solo el access token tras un refresh exitoso.
+   * El refresh token y el usuario se conservan tal como están en el store/localStorage.
+   */
+  updateAccessToken(accessToken: string): void {
+    this._accessToken.set(accessToken);
+    localStorage.setItem(STORAGE_ACCESS_TOKEN_KEY, accessToken);
+  }
+
+  /**
+   * Parchea los campos editables del usuario en el store sin tocar los tokens ni los roles.
+   * Usar tras un `PUT /api/Auth/me` exitoso.
+   */
+  patchUserFields(fields: Pick<User, 'firstName' | 'lastName' | 'phoneNumber' | 'birthDate'>): void {
+    const current = this._user();
+    if (!current) return;
+    const updated: User = { ...current, ...fields };
+    this._user.set(updated);
+    localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(updated));
+  }
+
   /** Devuelve `true` si el usuario autenticado tiene el rol indicado. */
   hasRole(roleName: string): boolean {
     return this._user()?.roles.some(r => r.name === roleName) ?? false;

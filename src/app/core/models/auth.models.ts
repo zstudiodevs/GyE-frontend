@@ -38,3 +38,8 @@ export interface AuthTokens {
   refreshToken: string;
   user: User;
 }
+
+/** data de POST /api/Auth/refresh — solo devuelve el nuevo access token */
+export interface RefreshTokenResponse {
+  accessToken: string;
+}

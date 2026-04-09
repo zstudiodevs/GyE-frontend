@@ -11,8 +11,8 @@ import { AuthStoreService } from '../services/auth-store.service';
 let isRefreshing = false;
 const refreshSubject = new BehaviorSubject<string | null>(null);
 
-/** Endpoints de autenticación que no deben llevar el token (evita bucles). */
-const AUTH_URL_PATTERN = /\/api\/Auth\//i;
+/** Endpoints públicos de autenticación que no deben llevar el token (evita bucles). */
+const AUTH_URL_PATTERN = /\/api\/Auth\/(login|refresh|logout|register)/i;
 
 // ── Interceptor ───────────────────────────────────────────────────────────────
 

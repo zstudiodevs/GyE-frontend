@@ -15,6 +15,22 @@ export interface User {
   roles: Role[];
 }
 
+/**
+ * Perfil del usuario autenticado devuelto por GET /api/Auth/me y PUT /api/Auth/me.
+ * Difiere de `User` en que `roles` es una lista de nombres (strings), no objetos `Role`.
+ */
+export interface UserProfile {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  isActive: boolean;
+  birthDate: string; // ISO date: YYYY-MM-DD
+  membershipId: string;
+  roles: string[];
+}
+
 // ── Requests ──────────────────────────────────────────────────────────────────
 
 /** POST /api/Users */

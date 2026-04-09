@@ -38,6 +38,10 @@ El backend corre en `https://localhost:7098` durante el desarrollo. El contrato 
 
 Toda llamada HTTP desde servicios retorna `Observable`; se usa `toSignal()` en el componente para convertir a seniales.
 
+**Convencion de respuestas**: Todos los endpoints devuelven `ApiResponse<T>` (`success`, `data`, `pagination`, `error`). Los servicios hacen unwrap con `.pipe(map(r => r.data!))` antes de retornar el Observable tipado al componente. Excepciones documentadas:
+- `POST /api/Auth/refresh` devuelve solo `{ accessToken }` (sin refreshToken ni user).
+- `GET /api/Auth/me` y `PUT /api/Auth/me` devuelven `UserProfile` con `roles: string[]` (no objetos `Role`).
+
 ## Stack
 
 | Layer | Technology |
@@ -66,12 +70,12 @@ src/
         auth.interceptor.ts     # JWT attach + ciclo de refresh en 401
       models/
         api.models.ts           # ApiResponse<T>, PaginationMeta, ApiError
-        auth.models.ts          # LoginRequest, AuthTokens, RegisterRequest
+        auth.models.ts          # LoginRequest, AuthTokens, RefreshTokenResponse, RegisterRequest, UpdateMeRequest
         role.models.ts          # Role, Permission, CreateRoleRequest
-        user.models.ts          # User, CreateUserRequest, UpdateUserRequest
+        user.models.ts          # User, UserProfile, CreateUserRequest, UpdateUserRequest
       services/
-        auth-store.service.ts   # Estado reactivo de sesion (signals + localStorage)
-        auth.service.ts         # HTTP: login, refresh, logout, initSession
+        auth-store.service.ts   # Estado reactivo de sesion (signals + localStorage); expone updateAccessToken(), patchUserFields()
+        auth.service.ts         # HTTP: login, refresh, logout, initSession, getMe, updateMe
         theme.service.ts        # Tema claro/oscuro con localStorage
     features/
       auth/
@@ -82,7 +86,7 @@ src/
         shell.routes.ts         # Rutas hijas protegidas por authGuard
       reservas/                 # (placeholder) Feature de reservas
       mis-turnos/               # (placeholder) Historial de turnos
-      perfil/                   # (placeholder) Perfil del socio
+      perfil/                   # Vista de perfil del socio logueado (ver datos, editar, cerrar sesion)
       admin/                    # (placeholder) Panel de administracion
     shared/                     # Componentes/pipes/directivas reutilizables
     app.config.ts               # Root application configuration

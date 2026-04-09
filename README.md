@@ -46,18 +46,18 @@ Actualmente los socios coordinan turnos por un grupo de WhatsApp, lo que genera 
 |------|--------|
 | Bootstrap zoneless + tema Material 3 | Completo |
 | Sistema de glows y tema claro/oscuro | Completo |
-| Modelos de dominio (User, Role, AuthTokens, API) | Completo |
+| Modelos de dominio (User, UserProfile, Role, AuthTokens, API) | Completo |
 | AuthStoreService (signals + localStorage) | Completo |
-| AuthService (login, refresh, logout, initSession) | Completo |
+| AuthService (login, refresh, logout, initSession, getMe, updateMe) | Completo |
 | authInterceptor (JWT + ciclo de refresh 401) | Completo |
 | Guards: authGuard, guestGuard, adminGuard | Completo |
 | Configuracion de entornos (dev/prod) | Completo |
 | Shell layout (toolbar, bottom nav mobile, router-outlet) | Completo |
 | Scaffold de rutas con lazy loading | Completo |
 | Pagina de login | Completo |
+| Feature: Perfil (ver datos, editar, datepicker, cerrar sesion) | Completo |
 | Feature: Reservas | Placeholder |
 | Feature: Mis turnos | Placeholder |
-| Feature: Perfil | Placeholder |
 | Feature: Admin | Placeholder |
 | Modelos de dominio de reservas (Booking, Court, Slot) | Pendiente |
 
