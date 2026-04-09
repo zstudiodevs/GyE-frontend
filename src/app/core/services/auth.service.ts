@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, firstValueFrom, map, of, tap } from 'rxjs';
 import type { Observable } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
 import { AuthStoreService } from './auth-store.service';
 import { AuthTokens, LoginRequest, RefreshRequest } from '../models/auth.models';
 
@@ -10,10 +11,11 @@ import { AuthTokens, LoginRequest, RefreshRequest } from '../models/auth.models'
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly store = inject(AuthStoreService);
+  private readonly baseUrl = environment.apiUrl;
 
   /** Autentica al usuario y persiste la sesión en el store. */
   login(request: LoginRequest): Observable<AuthTokens> {
-    return this.http.post<AuthTokens>('/api/Auth/login', request).pipe(
+    return this.http.post<AuthTokens>(`${this.baseUrl}/api/Auth/login`, request).pipe(
       tap(tokens => this.store.setSession(tokens)),
     );
   }
@@ -28,7 +30,7 @@ export class AuthService {
       throw new Error('No hay refresh token disponible.');
     }
     const body: RefreshRequest = { refreshToken };
-    return this.http.post<AuthTokens>('/api/Auth/refresh', body).pipe(
+    return this.http.post<AuthTokens>(`${this.baseUrl}/api/Auth/refresh`, body).pipe(
       tap(tokens => this.store.setSession(tokens)),
     );
   }

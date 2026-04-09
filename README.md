@@ -1,6 +1,6 @@
-# GyE Pelota Paleta – Frontend
+# GyE Pelota Paleta - Frontend
 
-Aplicación web para el club **Gimnasia y Esgrima de Concepción del Uruguay**, Entre Ríos, Argentina.
+Aplicacion web para el club **Gimnasia y Esgrima de Concepcion del Uruguay**, Entre Rios, Argentina.
 
 ## Objetivo
 
@@ -8,47 +8,70 @@ Digitalizar el proceso de reserva de turnos para jugar **Pelota Paleta**, reempl
 
 ## Contexto
 
-Actualmente los socios coordinan turnos por un grupo de WhatsApp, lo que genera un proceso engorroso, opaco e inequitativo (dependencia del administrador del grupo, problemas de conectividad, posibilidad de favoritismos). Esta app resuelve ese problema con un sistema centralizado, justo y auditable.
+Actualmente los socios coordinan turnos por un grupo de WhatsApp, lo que genera un proceso engorros, opaco e inequitativo (dependencia del administrador del grupo, problemas de conectividad, posibilidad de favoritismos). Esta app resuelve ese problema con un sistema centralizado, justo y auditable.
 
 ## Funcionalidades
 
 ### Para socios
 
-- **Autenticación**: Login con email y contraseña.
+- **Autenticacion**: Login con email y contrasena.
 - **Reserva de turnos**: Reservar la cancha disponible (actualmente domingos a las 22 hs; configurable).
 - **Capacidad por turno**: 2 o 4 jugadores.
-- **Invitar socios**: El creador invita a otros socios buscando por nombre, apellido, email o número de socio.
+- **Invitar socios**: El creador invita a otros socios buscando por nombre, apellido, email o numero de socio.
 - **Turnos abiertos**: El creador puede publicar el turno como abierto para que cualquier socio solicite unirse.
-- **Cancelación**: Posible hasta 1 hora antes del inicio del turno.
-- **Historial**: Vista de reserves pasadas y futuras propias.
+- **Cancelacion**: Posible hasta 1 hora antes del inicio del turno.
+- **Historial**: Vista de reservas pasadas y futuras propias.
 
 ### Para administradores
 
 - **Vista global de reservas**: Ver y cancelar cualquier reserva.
-- **Gestión de disponibilidad**: Configurar canchas, días y horarios habilitados.
-- **Gestión de usuarios**: Alta y baja de socios.
+- **Gestion de disponibilidad**: Configurar canchas, dias y horarios habilitados.
+- **Gestion de usuarios**: Alta y baja de socios.
 - **RBAC**: Panel de control para crear roles personalizados con permisos configurables.
 
-## Stack técnico
+## Stack tecnico
 
 | Layer | Technology |
-|-------|-----------|
-| Framework | Angular `^21.2.0` |
-| UI library | Angular Material `^21.2.5` |
-| Change detection | Zoneless (`provideZonelessChangeDetection()`) |
+|-------|------------|
+| Framework | Angular ``^21.2.0`` |
+| UI library | Angular Material ``^21.2.5`` |
+| Change detection | Zoneless (``provideZonelessChangeDetection()``) |
 | Reactivity | Angular Signals |
 | Styling | SCSS + Material 3 (azure palette, light/dark) |
-| Backend | REST API en desarrollo (contrato coordinado iterativamente) |
+| Backend | REST API ``https://localhost:7098`` (dev) |
+
+## Estado de desarrollo
+
+| Area | Estado |
+|------|--------|
+| Bootstrap zoneless + tema Material 3 | Completo |
+| Sistema de glows y tema claro/oscuro | Completo |
+| Modelos de dominio (User, Role, AuthTokens, API) | Completo |
+| AuthStoreService (signals + localStorage) | Completo |
+| AuthService (login, refresh, logout, initSession) | Completo |
+| authInterceptor (JWT + ciclo de refresh 401) | Completo |
+| Guards: authGuard, guestGuard, adminGuard | Completo |
+| Configuracion de entornos (dev/prod) | Completo |
+| Shell layout (toolbar, bottom nav mobile, router-outlet) | Completo |
+| Scaffold de rutas con lazy loading | Completo |
+| Pagina de login | Completo |
+| Feature: Reservas | Placeholder |
+| Feature: Mis turnos | Placeholder |
+| Feature: Perfil | Placeholder |
+| Feature: Admin | Placeholder |
+| Modelos de dominio de reservas (Booking, Court, Slot) | Pendiente |
 
 ## Comandos de desarrollo
 
 ```bash
 npm install          # Instalar dependencias
-ng serve             # Servidor dev → http://localhost:4200
-ng build             # Build de producción
+ng serve             # Servidor dev -> http://localhost:4200
+ng build             # Build de produccion
 ng test              # Tests unitarios (Vitest)
 ng lint              # Linting
 ```
+
+> El backend de desarrollo debe estar corriendo en `https://localhost:7098` para que las llamadas HTTP funcionen.
 
 ## Recursos
 
