@@ -54,3 +54,84 @@ body {
 html.dark-theme body {
   color-scheme: dark;
 }
+
+// ─── Dialog full-screen (mobile) ─────────────────────────────────────────────
+.dialog-fullscreen {
+  .mat-mdc-dialog-container {
+    border-radius: 0 !important;
+  }
+
+  // Surface ocupa toda la altura y distribuye espacio con flexbox
+  .mdc-dialog__container,
+  .mdc-dialog__surface,
+  .mat-mdc-dialog-surface {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  // El contenido crece para ocupar el espacio libre entre título y acciones
+  .mat-mdc-dialog-content {
+    flex: 1 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+  }
+
+  // Acciones siempre al fondo
+  .mat-mdc-dialog-actions {
+    flex-shrink: 0 !important;
+    padding-bottom: calc(0.875rem + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+// ─── Dialog: glow + backdrop blur (desktop) ──────────────────────────────────
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.24),
+    0 0 0 1px var(--mat-sys-outline-variant),
+    0 0 24px 4px var(--glow-color) !important;
+}
+
+.cdk-overlay-backdrop.cdk-overlay-dark-backdrop {
+  @media (min-width: 768px) {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.32) !important;
+  }
+}
+
+// ─── Dialog: título ───────────────────────────────────────────────────────────
+.mat-mdc-dialog-title {
+  background: linear-gradient(
+    135deg,
+    var(--mat-sys-primary-container),
+    var(--mat-sys-surface-container-high)
+  );
+  margin: 0 !important;
+  padding: 1.25rem 1.5rem !important;
+  border-bottom: 2px solid var(--mat-sys-primary);
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em;
+  color: var(--mat-sys-on-surface) !important;
+
+  // Icono dentro del título
+  mat-icon {
+    color: var(--mat-sys-primary);
+    flex-shrink: 0;
+  }
+}
+
+// ─── Dialog: acciones ─────────────────────────────────────────────────────────
+.mat-mdc-dialog-actions {
+  padding: 0.875rem 1.5rem !important;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  gap: 0.5rem !important;
+  background: var(--mat-sys-surface-container-low);
+
+  // Botón cancelar: apagado, claramente secundario
+  [mat-button]:not([mat-flat-button]):not([mat-raised-button]) {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}

@@ -1,0 +1,157 @@
+<div class="role-edit">
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <div class="role-edit__header">
+    <button mat-icon-button (click)="goBack()" aria-label="Volver a roles">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div class="role-edit__header-text">
+      <h1 class="role-edit__title">{{ isEditing ? 'Editar rol' : 'Nuevo rol' }}</h1>
+      @if (isEditing && roleName()) {
+        <span class="role-edit__subtitle">{{ roleName() }}</span>
+      }
+    </div>
+
+    <!-- Guardar — solo visible en desktop -->
+    <button
+      mat-flat-button
+      class="role-edit__header-save"
+      [disabled]="saving() || loadingData()"
+      (click)="save()"
+    >
+      @if (saving()) {
+        <mat-spinner diameter="18" />
+      } @else {
+        <mat-icon>save</mat-icon>
+      }
+      Guardar
+    </button>
+  </div>
+
+  <!-- ── Cargando ────────────────────────────────────────────────────────── -->
+  @if (loadingData()) {
+    <div class="role-edit__loading">
+      <mat-spinner diameter="48" />
+    </div>
+  }
+
+  <!-- ── Error de carga ─────────────────────────────────────────────────── -->
+  @if (!loadingData() && loadError()) {
+    <div class="role-edit__error" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ loadError() }}</span>
+    </div>
+  }
+
+  <!-- ── Contenido ──────────────────────────────────────────────────────── -->
+  @if (!loadingData() && !loadError()) {
+
+    <!-- Información básica -->
+    <mat-card class="role-edit__card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="card-icon">shield</mat-icon>
+        <mat-card-title>Información del rol</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" class="role-edit__form">
+          @if (!isEditing) {
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="name" autocomplete="off" />
+              @if (form.get('name')!.hasError('required') && form.get('name')!.touched) {
+                <mat-error>El nombre es requerido.</mat-error>
+              }
+            </mat-form-field>
+          }
+          <mat-form-field appearance="outline">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+            @if (form.get('description')!.hasError('required') && form.get('description')!.touched) {
+              <mat-error>La descripción es requerida.</mat-error>
+            }
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Permisos -->
+    <mat-card class="role-edit__card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="card-icon">lock</mat-icon>
+        <mat-card-title>Permisos</mat-card-title>
+        <mat-card-subtitle>
+          @if (totalSelected() === 0) {
+            Ninguno seleccionado
+          } @else {
+            {{ totalSelected() }} {{ totalSelected() === 1 ? 'permiso seleccionado' : 'permisos seleccionados' }}
+          }
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="role-edit__permissions">
+        @if (featureNames().length === 0) {
+          <p class="role-edit__hint">No hay permisos disponibles en el sistema.</p>
+        } @else {
+          <mat-accordion multi class="permissions-accordion">
+            @for (feature of featureNames(); track feature) {
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title class="feature-title">
+                    <mat-checkbox
+                      [checked]="isFeatureFullySelected(feature)"
+                      [indeterminate]="isFeaturePartiallySelected(feature)"
+                      (change)="toggleFeature(feature, $event.checked)"
+                      (click)="$event.stopPropagation()"
+                      [aria-label]="'Seleccionar todos en ' + feature"
+                    />
+                    <span class="feature-title__name">{{ feature }}</span>
+                  </mat-panel-title>
+                  <mat-panel-description class="feature-desc">
+                    {{ featureStats()[feature].selected }} / {{ featureStats()[feature].total }}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div class="perm-list">
+                  @for (perm of permissionsByFeature()[feature]; track perm.id) {
+                    <label class="perm-item">
+                      <mat-checkbox
+                        [checked]="isPermissionSelected(perm.id)"
+                        (change)="togglePermission(perm.id)"
+                      />
+                      <span class="perm-item__name">{{ perm.name }}</span>
+                    </label>
+                  }
+                </div>
+              </mat-expansion-panel>
+            }
+          </mat-accordion>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Error al guardar -->
+    @if (saveError()) {
+      <div class="role-edit__save-error" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ saveError() }}</span>
+      </div>
+    }
+
+  }
+
+  <!-- ── Barra de acciones sticky (mobile) ──────────────────────────────── -->
+  @if (!loadingData() && !loadError()) {
+    <div class="role-edit__actions">
+      <button mat-stroked-button (click)="goBack()">Cancelar</button>
+      <button mat-flat-button [disabled]="saving()" (click)="save()">
+        @if (saving()) {
+          <mat-spinner diameter="18" />
+        } @else {
+          <mat-icon>save</mat-icon>
+        }
+        Guardar
+      </button>
+    </div>
+  }
+
+</div>

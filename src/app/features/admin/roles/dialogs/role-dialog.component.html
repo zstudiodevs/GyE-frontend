@@ -1,0 +1,146 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon>{{ isEditing ? 'edit' : 'add_circle' }}</mat-icon>
+  {{ isEditing ? 'Editar rol — ' + role!.name : 'Nuevo rol' }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+
+  @if (loadingData()) {
+    <div class="dialog-content__loading">
+      <mat-spinner diameter="36" />
+    </div>
+  }
+
+  @if (!loadingData() && loadError()) {
+    <div class="dialog-content__error" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ loadError() }}</span>
+    </div>
+  }
+
+  @if (!loadingData() && !loadError()) {
+    <form [formGroup]="form" class="dialog-form">
+
+      <!-- Nombre (solo creación) -->
+      @if (!isEditing) {
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre del rol</mat-label>
+          <input matInput formControlName="name" autocomplete="off" />
+          @if (form.get('name')!.hasError('required') && form.get('name')!.touched) {
+            <mat-error>El nombre es requerido.</mat-error>
+          }
+        </mat-form-field>
+      }
+
+      <!-- Descripción -->
+      <mat-form-field appearance="outline">
+        <mat-label>Descripción</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          rows="2"
+          cdkTextareaAutosize
+        ></textarea>
+        @if (form.get('description')!.hasError('required') && form.get('description')!.touched) {
+          <mat-error>La descripción es requerida.</mat-error>
+        }
+      </mat-form-field>
+
+    </form>
+
+    <!-- Permisos asignados -->
+    <p class="dialog-content__section-title">
+      <mat-icon>verified</mat-icon>
+      Permisos asignados
+      <span class="section-badge">{{ assignedPermissions().length }}</span>
+    </p>
+
+    @if (assignedPermissions().length === 0) {
+      <p class="dialog-content__hint">Este rol no tiene permisos asignados.</p>
+    } @else {
+      <mat-chip-set class="assigned-chips" aria-label="Permisos asignados">
+        @for (perm of assignedPermissions(); track perm.id) {
+          <mat-chip
+            class="assigned-chip"
+            [removable]="true"
+            (removed)="togglePermission(perm.id)"
+          >
+            <span class="assigned-chip__feature">{{ perm.feature }}</span>
+            <span class="assigned-chip__name">{{ perm.name }}</span>
+            <button matChipRemove aria-label="Quitar permiso {{ perm.name }}">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        }
+      </mat-chip-set>
+    }
+
+    <mat-divider class="section-divider" />
+
+    <!-- Permisos disponibles -->
+    <p class="dialog-content__section-title">
+      <mat-icon>add_circle_outline</mat-icon>
+      Disponibles para agregar
+      @if (availableFeatureNames().length === 0) {
+        <span class="section-badge section-badge--done">Todos asignados</span>
+      }
+    </p>
+
+    @if (availableFeatureNames().length === 0) {
+      <p class="dialog-content__hint">Todos los permisos disponibles ya están asignados.</p>
+    }
+
+    <div class="available-list">
+      @for (feature of availableFeatureNames(); track feature) {
+        <div class="available-feature">
+          <div class="available-feature__header">
+            <span class="available-feature__name">{{ feature }}</span>
+            <button
+              mat-button
+              class="available-feature__add-all"
+              (click)="toggleFeature(feature)"
+            >
+              <mat-icon>playlist_add</mat-icon> Agregar todos
+            </button>
+          </div>
+          <div class="available-feature__items">
+            @for (perm of availableByFeature()[feature]; track perm.id) {
+              <button
+                mat-stroked-button
+                class="available-perm"
+                (click)="togglePermission(perm.id)"
+                [attr.aria-label]="'Agregar permiso ' + perm.name"
+              >
+                <mat-icon>add</mat-icon>
+                {{ perm.name }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (saveError()) {
+      <div class="dialog-content__error" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ saveError() }}</span>
+      </div>
+    }
+  }
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()" [disabled]="saving()">Cancelar</button>
+  <button
+    mat-flat-button
+    (click)="save()"
+    [disabled]="saving() || form.invalid || loadingData() || !!loadError()"
+  >
+    @if (saving()) {
+      <mat-spinner diameter="18" />
+    } @else {
+      {{ isEditing ? 'Guardar cambios' : 'Crear rol' }}
+    }
+  </button>
+</mat-dialog-actions>

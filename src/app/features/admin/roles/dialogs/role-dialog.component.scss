@@ -1,0 +1,178 @@
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dialog-content {
+  min-width: min(540px, 100%);
+  padding-top: 0.5rem !important;
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+    margin-top: 0.5rem;
+
+    mat-icon { flex-shrink: 0; }
+  }
+
+  &__section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--mat-sys-on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 1.25rem 0 0.6rem;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &__hint {
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0 0 0.5rem;
+  }
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.section-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  margin-left: 0.25rem;
+  text-transform: none;
+  letter-spacing: 0;
+
+  &--done {
+    background: var(--mat-sys-tertiary-container, var(--mat-sys-secondary-container));
+    color: var(--mat-sys-on-tertiary-container, var(--mat-sys-on-secondary-container));
+  }
+}
+
+.section-divider {
+  margin: 1.25rem 0 0;
+}
+
+// ── Permisos asignados (chips) ────────────────────────────────────────────────
+
+.assigned-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.25rem 0;
+}
+
+.assigned-chip {
+  background: var(--mat-sys-secondary-container) !important;
+  color: var(--mat-sys-on-secondary-container) !important;
+
+  &__feature {
+    font-size: 0.7rem;
+    opacity: 0.7;
+    margin-right: 0.2rem;
+
+    &::after {
+      content: ' /';
+    }
+  }
+
+  &__name {
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+}
+
+// ── Permisos disponibles ──────────────────────────────────────────────────────
+
+.available-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.available-feature {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0.5rem 0.4rem 0.75rem;
+    background: var(--mat-sys-surface-container);
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
+
+  &__name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: capitalize;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__add-all {
+    font-size: 0.8rem;
+    line-height: 1;
+    padding: 0.2rem 0.5rem;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      margin-right: 0.2rem;
+    }
+  }
+
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.6rem 0.75rem;
+  }
+}
+
+.available-perm {
+  font-size: 0.85rem;
+  height: 34px !important;
+  line-height: 34px !important;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--mat-sys-primary);
+  }
+}
+

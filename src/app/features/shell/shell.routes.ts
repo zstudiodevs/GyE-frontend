@@ -28,8 +28,8 @@ export const shellRoutes: Routes = [
       {
         path: 'admin',
         canActivate: [adminGuard],
-        loadComponent: () =>
-          import('../admin/admin.component').then(m => m.AdminComponent),
+        loadChildren: () =>
+          import('../admin/admin.routes').then(m => m.adminRoutes),
       },
     ],
   },

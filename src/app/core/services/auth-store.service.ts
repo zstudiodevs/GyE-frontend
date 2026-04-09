@@ -37,7 +37,7 @@ export class AuthStoreService {
 
   /** `true` si el usuario tiene el rol Administrador. */
   readonly isAdmin = computed(() =>
-    this._user()?.roles.some(r => r.name === 'Administrador') ?? false
+    this._user()?.roles.some(r => r.name === 'Admin' || r.name === 'SuperAdmin') ?? false
   );
 
   /**

@@ -1,0 +1,30 @@
+<div class="admin">
+
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="admin__tabs">
+    <a
+      mat-tab-link
+      routerLink="usuarios"
+      routerLinkActive
+      #rlaUsuarios="routerLinkActive"
+      [active]="rlaUsuarios.isActive"
+    >
+      Usuarios
+    </a>
+    <a
+      mat-tab-link
+      routerLink="roles"
+      routerLinkActive
+      #rlaRoles="routerLinkActive"
+      [active]="rlaRoles.isActive"
+    >
+      Roles
+    </a>
+  </nav>
+
+  <mat-tab-nav-panel #tabPanel>
+    <div class="admin__content">
+      <router-outlet />
+    </div>
+  </mat-tab-nav-panel>
+
+</div>

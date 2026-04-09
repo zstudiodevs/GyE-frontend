@@ -1,0 +1,77 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon>manage_accounts</mat-icon>
+  Gestionar roles — {{ user.firstName }} {{ user.lastName }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+
+  @if (loadingRoles()) {
+    <div class="dialog-content__loading">
+      <mat-spinner diameter="36" />
+    </div>
+  }
+
+  @if (!loadingRoles() && loadError()) {
+    <div class="dialog-content__error" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ loadError() }}</span>
+    </div>
+  }
+
+  @if (!loadingRoles() && !loadError()) {
+    <p class="dialog-content__hint">
+      Seleccioná los roles que querés asignar a este usuario.
+    </p>
+
+    <div class="roles-list" role="group" aria-label="Roles disponibles">
+      @for (role of allRoles(); track role.id) {
+        <div
+          class="roles-list__item"
+          [class.roles-list__item--selected]="isSelected(role.name)"
+          (click)="toggleRole(role.name)"
+          (keydown.enter)="toggleRole(role.name)"
+          (keydown.space)="$event.preventDefault(); toggleRole(role.name)"
+          role="checkbox"
+          [attr.aria-checked]="isSelected(role.name)"
+          tabindex="0"
+        >
+          <mat-checkbox
+            [checked]="isSelected(role.name)"
+            (click)="$event.stopPropagation()"
+            (change)="toggleRole(role.name)"
+            aria-hidden="true"
+          />
+          <div class="roles-list__item-info">
+            <span class="roles-list__item-name">{{ role.name }}</span>
+            @if (role.description) {
+              <span class="roles-list__item-desc">{{ role.description }}</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (saveError()) {
+      <div class="dialog-content__error" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ saveError() }}</span>
+      </div>
+    }
+  }
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()" [disabled]="saving()">Cancelar</button>
+  <button
+    mat-flat-button
+    (click)="save()"
+    [disabled]="saving() || !hasChanges() || loadingRoles() || !!loadError()"
+  >
+    @if (saving()) {
+      <mat-spinner diameter="18" />
+    } @else {
+      Guardar
+    }
+  </button>
+</mat-dialog-actions>

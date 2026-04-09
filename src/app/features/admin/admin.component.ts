@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<p class="placeholder">Administración — próximamente</p>`,
-  styles: [`.placeholder { padding: 1.5rem; color: var(--mat-sys-on-surface-variant); }`],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatTabsModule],
+  templateUrl: './admin.component.html',
+  styleUrl: './admin.component.scss',
 })
 export class AdminComponent {}

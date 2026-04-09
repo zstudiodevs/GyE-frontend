@@ -16,6 +16,22 @@ export interface User {
 }
 
 /**
+ * Usuario tal como lo devuelve GET /api/Users (listado).
+ * El backend devuelve `roles` como array de nombres (strings), no objetos Role.
+ */
+export interface UserListItem {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  isActive: boolean;
+  birthDate: string; // ISO date: YYYY-MM-DD
+  membershipId: string;
+  roles: string[];
+}
+
+/**
  * Perfil del usuario autenticado devuelto por GET /api/Auth/me y PUT /api/Auth/me.
  * Difiere de `User` en que `roles` es una lista de nombres (strings), no objetos `Role`.
  */

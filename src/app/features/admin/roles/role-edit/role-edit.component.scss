@@ -1,0 +1,203 @@
+.role-edit {
+  padding: 1rem;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  // Espacio para la barra de acciones sticky en mobile
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+
+  // ── Header ────────────────────────────────────────────────────────────────
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__header-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__subtitle {
+    font-size: 0.8rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  // El botón guardar del header solo se muestra en desktop
+  &__header-save {
+    display: none;
+    flex-shrink: 0;
+  }
+
+  // ── Estados ───────────────────────────────────────────────────────────────
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 3rem 0;
+  }
+
+  &__error,
+  &__save-error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+    font-size: 0.875rem;
+
+    mat-icon { flex-shrink: 0; }
+  }
+
+  &__hint {
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface-variant);
+    padding: 0.5rem 1rem;
+    margin: 0;
+  }
+
+  // ── Cards ─────────────────────────────────────────────────────────────────
+
+  &__card {
+    width: 100%;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-top: 0.5rem;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+
+  // El card de permisos no tiene padding interno — el accordion lo maneja
+  &__permissions {
+    padding: 0 !important;
+  }
+
+  // ── Barra de acciones sticky (mobile) ─────────────────────────────────────
+
+  &__actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    background: var(--mat-sys-surface-container-low);
+    border-top: 1px solid var(--mat-sys-outline-variant);
+    z-index: 10;
+
+    button { flex: 1; }
+  }
+
+  // ── Desktop ───────────────────────────────────────────────────────────────
+
+  @media (min-width: 768px) {
+    padding-bottom: 2rem;
+
+    &__header-save {
+      display: inline-flex;
+    }
+
+    &__actions {
+      display: none;
+    }
+  }
+}
+
+// ── Card icon (avatar) ─────────────────────────────────────────────────────
+
+.card-icon {
+  color: var(--mat-sys-primary) !important;
+  background: var(--mat-sys-primary-container) !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 20px !important;
+}
+
+// ── Accordion de permisos ─────────────────────────────────────────────────
+
+.permissions-accordion {
+  // Eliminar el borde inferior del último panel para que quede
+  // flush con el card
+  .mat-expansion-panel:last-child {
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+}
+
+.feature-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  // Evitar que MdcPanelTitle aplique flex-grow al label del checkbox
+  flex: unset !important;
+  width: 100%;
+
+  &__name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: capitalize;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.feature-desc {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--mat-sys-primary);
+  flex-shrink: 0;
+}
+
+// ── Lista de permisos dentro de un panel ──────────────────────────────────
+
+.perm-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.perm-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: var(--mat-sys-surface-container);
+  }
+
+  &__name {
+    font-size: 0.875rem;
+    line-height: 1.3;
+  }
+}
