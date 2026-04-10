@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { environment } from '../../../environments/environment';
 import { AuthStoreService } from './auth-store.service';
-import { AuthTokens, LoginRequest, RefreshRequest, RefreshTokenResponse, UpdateMeRequest } from '../models/auth.models';
+import { AuthTokens, LoginRequest, RefreshRequest, UpdateMeRequest } from '../models/auth.models';
 import type { ApiResponse } from '../models/api.models';
 import type { UserProfile } from '../models/user.models';
 
@@ -25,18 +25,18 @@ export class AuthService {
   }
 
   /**
-   * Solicita un nuevo access token usando el refresh token almacenado.
-   * Solo actualiza el access token en el store; el refresh token y el usuario se conservan.
+   * Solicita nuevos tokens usando el refresh token almacenado.
+   * Actualiza la sesión completa en el store (access token, refresh token y usuario).
    */
-  refresh(): Observable<RefreshTokenResponse> {
+  refresh(): Observable<AuthTokens> {
     const refreshToken = this.store.refreshToken();
     if (!refreshToken) {
       throw new Error('No hay refresh token disponible.');
     }
     const body: RefreshRequest = { refreshToken };
-    return this.http.post<ApiResponse<RefreshTokenResponse>>(`${this.baseUrl}/api/Auth/refresh`, body).pipe(
+    return this.http.post<ApiResponse<AuthTokens>>(`${this.baseUrl}/api/Auth/refresh`, body).pipe(
       map(r => r.data!),
-      tap(r => this.store.updateAccessToken(r.accessToken)),
+      tap(tokens => this.store.setSession(tokens)),
     );
   }
 
