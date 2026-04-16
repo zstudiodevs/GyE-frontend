@@ -76,7 +76,7 @@ export class RoleDialogComponent {
   readonly assignedPermissions = computed(() =>
     this.allPermissions()
       .filter(p => this.selectedPermissionIds().has(p.id))
-      .sort((a, b) => a.feature.localeCompare(b.feature) || a.name.localeCompare(b.name))
+      .sort((a, b) => a.description.localeCompare(b.description) || a.name.localeCompare(b.name))
   );
 
   /** Permisos disponibles para agregar, agrupados por feature (excluye los asignados). */

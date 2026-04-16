@@ -35,10 +35,10 @@ export class PermissionService {
       map(permissions => {
         const grouped: PermissionsByFeature = {};
         for (const perm of permissions) {
-          if (!grouped[perm.feature]) {
-            grouped[perm.feature] = [];
+          if (!grouped[perm.description]) {
+            grouped[perm.description] = [];
           }
-          grouped[perm.feature].push(perm);
+          grouped[perm.description].push(perm);
         }
         // Ordenar permisos dentro de cada feature por nombre
         for (const feature of Object.keys(grouped)) {

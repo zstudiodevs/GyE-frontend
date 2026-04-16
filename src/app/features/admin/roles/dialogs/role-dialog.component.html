@@ -65,7 +65,7 @@
             [removable]="true"
             (removed)="togglePermission(perm.id)"
           >
-            <span class="assigned-chip__feature">{{ perm.feature }}</span>
+            <span class="assigned-chip__feature">{{ perm.description }}</span>
             <span class="assigned-chip__name">{{ perm.name }}</span>
             <button matChipRemove aria-label="Quitar permiso {{ perm.name }}">
               <mat-icon>cancel</mat-icon>

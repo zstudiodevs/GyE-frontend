@@ -16,6 +16,8 @@ export interface PaginationMeta {
   pageSize: number;
   totalCount: number;
   totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
 }
 
 /**
@@ -23,6 +25,7 @@ export interface PaginationMeta {
  */
 export interface ApiError {
   message: string;
+  details: string[] | null;
 }
 
 /**

@@ -33,7 +33,7 @@ export class RoleService {
 
   /** GET /api/Roles/{id} — Obtiene un rol con todos sus permisos asignados. */
   getRole(id: string): Observable<RoleWithPermissions> {
-    return this.http.get<ApiResponse<RoleWithPermissions>>(`${this.baseUrl}/api/Roles/${id}/permissions`).pipe(
+    return this.http.get<ApiResponse<RoleWithPermissions>>(`${this.baseUrl}/api/Roles/${id}`).pipe(
       map(r => r.data!),
     );
   }

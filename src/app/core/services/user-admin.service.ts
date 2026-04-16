@@ -33,8 +33,8 @@ export class UserAdminService {
   }
 
   /** GET /api/Users/{id} — Obtiene un usuario por id. */
-  getUser(id: string): Observable<User> {
-    return this.http.get<ApiResponse<User>>(`${this.baseUrl}/api/Users/${id}`).pipe(
+  getUser(id: string): Observable<UserListItem> {
+    return this.http.get<ApiResponse<UserListItem>>(`${this.baseUrl}/api/Users/${id}`).pipe(
       map(r => r.data!),
     );
   }
@@ -55,8 +55,8 @@ export class UserAdminService {
 
   /** GET /api/Users/{id}/roles — Obtiene los roles asignados a un usuario. */
   getUserRoles(id: string): Observable<Role[]> {
-    return this.http.get<ApiResponse<Role[]>>(`${this.baseUrl}/api/Users/${id}/roles`).pipe(
-      map(r => r.data ?? []),
+    return this.http.get<ApiResponse<User>>(`${this.baseUrl}/api/Users/${id}/roles`).pipe(
+      map(r => r.data?.roles ?? []),
     );
   }
 

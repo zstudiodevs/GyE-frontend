@@ -31,7 +31,10 @@ export interface UpdateMeRequest {
 }
 
 // ── Responses ─────────────────────────────────────────────────────────────────
-
+/** data de POST /api/Auth/refresh — solo devuelve el nuevo access token */
+export interface RefreshTokenResponse {
+  accessToken: string;
+}
 /** data de POST /api/Auth/login y POST /api/Auth/refresh */
 export interface AuthTokens {
   accessToken: string;

@@ -14,7 +14,7 @@ export interface RoleWithPermissions extends Role {
 export interface Permission {
   id: string;
   name: string;
-  feature: string;
+  description: string;
 }
 
 // ── Requests ──────────────────────────────────────────────────────────────────
