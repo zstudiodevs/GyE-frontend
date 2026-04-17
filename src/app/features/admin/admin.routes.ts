@@ -23,6 +23,11 @@ export const adminRoutes: Routes = [
           import('./roles/roles.component').then(m => m.RolesComponent),
       },
       {
+        path: 'canchas',
+        loadComponent: () =>
+          import('./canchas/canchas.component').then(m => m.CanchasComponent),
+      },
+      {
         path: 'roles/new',
         loadComponent: () =>
           import('./roles/role-edit/role-edit.component').then(m => m.RoleEditComponent),

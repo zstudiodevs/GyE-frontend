@@ -19,6 +19,15 @@
     >
       Roles
     </a>
+    <a
+      mat-tab-link
+      routerLink="canchas"
+      routerLinkActive
+      #rlaCanchas="routerLinkActive"
+      [active]="rlaCanchas.isActive"
+    >
+      Canchas
+    </a>
   </nav>
 
   <mat-tab-nav-panel #tabPanel>

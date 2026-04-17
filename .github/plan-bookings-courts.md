@@ -10,17 +10,17 @@
 | Área | Estado |
 |------|--------|
 | Modelos Auth / User / Role / Permission | ✅ Correctos (bugs corregidos el 15/04/2026) |
-| `BookingService` | ❌ No existe |
-| `CourtService` | ❌ No existe |
-| Modelos de Bookings | ❌ No existen |
-| Modelos de Courts | ❌ No existen |
-| Feature `/reservas` | ⚠️ Placeholder vacío |
-| Feature `/mis-turnos` | ⚠️ Placeholder vacío |
-| Admin > Courts | ❌ No existe |
+| `BookingService` | ✅ Implementado (16/04/2026) |
+| `CourtService` | ✅ Implementado (16/04/2026) |
+| Modelos de Bookings | ✅ Implementados (16/04/2026) |
+| Modelos de Courts | ✅ Implementados (16/04/2026) |
+| Feature `/reservas` | ✅ Implementada (16/04/2026) |
+| Feature `/mis-turnos` | ✅ Implementada (16/04/2026) |
+| Admin > Courts | ✅ Implementado (16/04/2026) |
 
 ---
 
-## Paso 1 — Modelos (`src/app/core/models/`)
+## ~~Paso 1~~ ✅ Modelos (`src/app/core/models/`)
 
 Crear el archivo `booking.models.ts` con las siguientes interfaces y enums, mapeados 1:1 contra `v1.json`:
 
@@ -116,7 +116,7 @@ export interface UpdateCourtRequest {
 
 ---
 
-## Paso 2 — Servicios (`src/app/core/services/`)
+## ~~Paso 2~~ ✅ Servicios (`src/app/core/services/`)
 
 ### `booking.service.ts`
 
@@ -148,7 +148,7 @@ Métodos a implementar (todos retornan `Observable`, unwrapping `.pipe(map(r => 
 
 ---
 
-## Paso 3 — Feature `/reservas`
+## ~~Paso 3~~ ✅ Feature `/reservas`
 
 Ruta: `/reservas` → `ReservasComponent` (actualmente placeholder).
 
@@ -171,7 +171,7 @@ Ruta: `/reservas` → `ReservasComponent` (actualmente placeholder).
 
 ---
 
-## Paso 4 — Feature `/mis-turnos`
+## ~~Paso 4~~ ✅ Feature `/mis-turnos`
 
 Ruta: `/mis-turnos` → `MisTurnosComponent` (actualmente placeholder).
 
@@ -181,7 +181,7 @@ Ruta: `/mis-turnos` → `MisTurnosComponent` (actualmente placeholder).
 
 ---
 
-## Paso 5 — Admin > Courts
+## ~~Paso 5~~ ✅ Admin > Courts
 
 Ruta: `/admin/canchas` — nueva sub-ruta dentro de `admin.routes.ts`.
 

@@ -1,0 +1,205 @@
+.reservas {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 5.5rem; // espacio para el FAB
+}
+
+// ── Encabezado ────────────────────────────────────────────────────────────────
+
+.reservas__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.reservas__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--mat-sys-on-surface);
+}
+
+.reservas__new-btn {
+  display: none; // en mobile se usa el FAB
+}
+
+// ── Estados ───────────────────────────────────────────────────────────────────
+
+.reservas__loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.reservas__error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+
+  mat-icon { flex-shrink: 0; }
+  span { flex: 1; }
+}
+
+.reservas__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  p { margin: 0; }
+}
+
+// ── Lista ─────────────────────────────────────────────────────────────────────
+
+.reservas__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.reservas__paginator {
+  background: transparent;
+}
+
+// ── Card ──────────────────────────────────────────────────────────────────────
+
+.reserva-card {
+  background-color: var(--mat-sys-surface-container);
+  border-radius: 12px;
+
+  &--own {
+    border-left: 3px solid var(--mat-sys-primary);
+  }
+
+  &--cancelled {
+    opacity: 0.6;
+  }
+}
+
+.reserva-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.reserva-card__icon {
+  flex-shrink: 0;
+  color: var(--mat-sys-primary);
+  margin-top: 2px;
+}
+
+.reserva-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reserva-card__address {
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+.reserva-card__datetime {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.reserva-card__own-badge {
+  flex-shrink: 0;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--mat-sys-primary);
+}
+
+.reserva-card__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.reserva-card__players {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// Status chip colors
+.chip--status-0 { // Pendiente
+  background-color: var(--mat-sys-secondary-container) !important;
+  color: var(--mat-sys-on-secondary-container) !important;
+}
+
+.chip--status-1 { // Confirmado
+  background-color: var(--mat-sys-primary-container) !important;
+  color: var(--mat-sys-on-primary-container) !important;
+}
+
+.chip--status-2 { // Cancelado
+  background-color: var(--mat-sys-error-container) !important;
+  color: var(--mat-sys-on-error-container) !important;
+}
+
+.chip--status-3 { // Completado
+  background-color: var(--mat-sys-surface-variant) !important;
+  color: var(--mat-sys-on-surface-variant) !important;
+}
+
+.reserva-card__actions {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+// ── FAB ───────────────────────────────────────────────────────────────────────
+
+.reservas__fab {
+  position: fixed;
+  bottom: calc(64px + 1.25rem); // por encima del bottom nav
+  right: 1.25rem;
+  z-index: 10;
+}
+
+// ── Desktop ───────────────────────────────────────────────────────────────────
+
+@media (min-width: 768px) {
+  .reservas__new-btn {
+    display: flex;
+  }
+
+  .reservas__fab {
+    display: none;
+  }
+
+  .reservas {
+    padding-bottom: 1rem;
+  }
+}

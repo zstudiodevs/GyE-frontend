@@ -12,8 +12,8 @@ export const shellRoutes: Routes = [
     children: [
       {
         path: 'reservas',
-        loadComponent: () =>
-          import('../reservas/reservas.component').then(m => m.ReservasComponent),
+        loadChildren: () =>
+          import('../reservas/reservas.routes').then(m => m.reservasRoutes),
       },
       {
         path: 'mis-turnos',

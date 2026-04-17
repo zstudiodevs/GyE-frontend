@@ -1,0 +1,239 @@
+.mis-turnos {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 5.5rem; // espacio para el FAB
+}
+
+// ── Encabezado ────────────────────────────────────────────────────────────────
+
+.mis-turnos__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.mis-turnos__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--mat-sys-on-surface);
+}
+
+.mis-turnos__new-btn {
+  display: none; // en mobile se usa el FAB
+}
+
+// ── Estados ───────────────────────────────────────────────────────────────────
+
+.mis-turnos__loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.mis-turnos__error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+
+  mat-icon { flex-shrink: 0; }
+  span { flex: 1; }
+}
+
+.mis-turnos__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  p { margin: 0; }
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+
+.mis-turnos__tabs {
+  ::ng-deep .mat-mdc-tab-label-container {
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
+
+  ::ng-deep .mat-mdc-tab {
+    gap: 6px;
+
+    .mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin-left: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 9px;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.mis-turnos__paginator {
+  background: transparent;
+}
+
+// ── Lista ─────────────────────────────────────────────────────────────────────
+
+.turnos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+}
+
+// ── Card ──────────────────────────────────────────────────────────────────────
+
+.turno-card {
+  background-color: var(--mat-sys-surface-container);
+  border-radius: 12px;
+
+  &--creator {
+    border-left: 3px solid var(--mat-sys-primary);
+  }
+
+  &--cancelled {
+    opacity: 0.6;
+  }
+}
+
+.turno-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.turno-card__icon {
+  flex-shrink: 0;
+  color: var(--mat-sys-primary);
+  margin-top: 2px;
+}
+
+.turno-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.turno-card__address {
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+.turno-card__datetime {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.turno-card__creator-badge {
+  flex-shrink: 0;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--mat-sys-primary);
+}
+
+.turno-card__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.turno-card__players {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// Status chip colors
+.chip--status-0 { // Pendiente
+  background-color: var(--mat-sys-secondary-container) !important;
+  color: var(--mat-sys-on-secondary-container) !important;
+}
+
+.chip--status-1 { // Confirmado
+  background-color: var(--mat-sys-primary-container) !important;
+  color: var(--mat-sys-on-primary-container) !important;
+}
+
+.chip--status-2 { // Cancelado
+  background-color: var(--mat-sys-error-container) !important;
+  color: var(--mat-sys-on-error-container) !important;
+}
+
+.chip--status-3 { // Completado
+  background-color: var(--mat-sys-surface-variant) !important;
+  color: var(--mat-sys-on-surface-variant) !important;
+}
+
+.turno-card__actions {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+// ── FAB ───────────────────────────────────────────────────────────────────────
+
+.mis-turnos__fab {
+  position: fixed;
+  bottom: calc(64px + 1.25rem);
+  right: 1.25rem;
+  z-index: 10;
+}
+
+// ── Desktop ───────────────────────────────────────────────────────────────────
+
+@media (min-width: 768px) {
+  .mis-turnos__new-btn {
+    display: flex;
+  }
+
+  .mis-turnos__fab {
+    display: none;
+  }
+
+  .mis-turnos {
+    padding-bottom: 1rem;
+  }
+}

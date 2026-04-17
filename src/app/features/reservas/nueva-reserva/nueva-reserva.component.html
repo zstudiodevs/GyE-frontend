@@ -1,0 +1,216 @@
+<div class="nueva-reserva">
+
+  <div class="nueva-reserva__header">
+    <button mat-icon-button (click)="goBack()" aria-label="Volver">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1 class="nueva-reserva__title">Nueva reserva</h1>
+  </div>
+
+  <mat-stepper orientation="vertical" linear #stepper (selectionChange)="onStepChange($event)">
+
+    <!-- ── Paso 1: Cancha y fecha ────────────────────────────────────────── -->
+    <mat-step [stepControl]="step1" label="Cancha y fecha">
+      <form [formGroup]="step1" class="step-form">
+
+        @if (courtsLoading()) {
+          <div class="step-loading">
+            <mat-spinner diameter="32" />
+          </div>
+        } @else {
+          <mat-form-field appearance="outline" class="step-field">
+            <mat-label>Cancha</mat-label>
+            <mat-select formControlName="courtId">
+              @for (court of courts(); track court.id) {
+                <mat-option [value]="court.id">{{ court.address }}</mat-option>
+              }
+              @empty {
+                <mat-option disabled>No hay canchas disponibles</mat-option>
+              }
+            </mat-select>
+            <mat-error>Seleccioná una cancha</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="step-field">
+            <mat-label>Fecha</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="date"
+              [min]="minDate"
+              placeholder="DD/MM/AAAA"
+            >
+            <mat-datepicker-toggle matIconSuffix [for]="picker" />
+            <mat-datepicker #picker />
+            <mat-error>Seleccioná una fecha</mat-error>
+          </mat-form-field>
+        }
+
+        <div class="step-actions">
+          <button mat-flat-button matStepperNext [disabled]="step1.invalid">
+            Siguiente
+          </button>
+        </div>
+
+      </form>
+    </mat-step>
+
+    <!-- ── Paso 2: Horario ───────────────────────────────────────────────── -->
+    <mat-step [stepControl]="step2" label="Horario">
+      <form [formGroup]="step2" class="step-form">
+
+        @if (slotsLoading()) {
+          <div class="step-loading">
+            <mat-spinner diameter="32" />
+          </div>
+        } @else if (slotsError()) {
+          <p class="step-error">
+            <mat-icon>error_outline</mat-icon>
+            No se pudieron cargar los horarios.
+            <button mat-button type="button" (click)="loadSlots()">Reintentar</button>
+          </p>
+        } @else if (slots().length === 0) {
+          <p class="step-hint">No hay horarios disponibles para la fecha seleccionada.</p>
+        } @else {
+          <p class="step-hint">Elegí un horario disponible:</p>
+          <mat-button-toggle-group
+            formControlName="startTime"
+            class="slots-grid"
+            aria-label="Horario disponible"
+          >
+            @for (slot of slots(); track slot) {
+              <mat-button-toggle [value]="slot">
+                {{ slot.substring(0, 5) }}
+              </mat-button-toggle>
+            }
+          </mat-button-toggle-group>
+        }
+
+        <div class="step-actions">
+          <button mat-button matStepperPrevious type="button">Anterior</button>
+          <button mat-flat-button matStepperNext [disabled]="step2.invalid" type="button">
+            Siguiente
+          </button>
+        </div>
+
+      </form>
+    </mat-step>
+
+    <!-- ── Paso 3: Modalidad ─────────────────────────────────────────────── -->
+    <mat-step [stepControl]="step3" label="Visibilidad">
+      <form [formGroup]="step3" class="step-form">
+
+        <p class="step-hint">¿Quién puede ver y solicitar unirse al turno?</p>
+
+        <mat-button-toggle-group
+          formControlName="visibility"
+          class="type-group"
+          aria-label="Visibilidad del turno"
+        >
+          <mat-button-toggle [value]="BookingVisibility.Open" class="type-option">
+            <mat-icon>public</mat-icon>
+            <span class="type-label">Abierto</span>
+            <span class="type-desc">Cualquier socio puede solicitar unirse</span>
+          </mat-button-toggle>
+          <mat-button-toggle [value]="BookingVisibility.Closed" class="type-option">
+            <mat-icon>lock</mat-icon>
+            <span class="type-label">Cerrado</span>
+            <span class="type-desc">Solo los socios invitados pueden ver el turno</span>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <div class="step-actions">
+          <button mat-button matStepperPrevious type="button">Anterior</button>
+          <button mat-flat-button matStepperNext type="button">Siguiente</button>
+        </div>
+
+      </form>
+    </mat-step>
+
+    <!-- ── Paso 4: Invitar socios ────────────────────────────────────────── -->
+    <mat-step label="Invitar socios" [optional]="bookingVisibility() === BookingVisibility.Open">
+
+      @if (bookingVisibility() === BookingVisibility.Open) {
+        <p class="step-hint invite-info">
+          <mat-icon>info</mat-icon>
+          El turno es abierto — cualquier socio podrá solicitar unirse desde el panel de reservas. Igual podés invitar socios directamente.
+        </p>
+      } @else {
+        <p class="step-hint">Buscá y seleccioná los socios a invitar (opcional):</p>
+
+        <div class="invite-search">
+          <mat-form-field appearance="outline" class="step-field">
+            <mat-label>Buscar socio</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input
+              matInput
+              placeholder="Nombre, apellido, email o nro. de socio"
+              [value]="userFilter()"
+              (input)="onFilterChange($event)"
+            >
+          </mat-form-field>
+        </div>
+
+        @if (usersLoading()) {
+          <div class="step-loading">
+            <mat-spinner diameter="32" />
+          </div>
+        } @else {
+          <div class="invite-list">
+            @for (user of filteredUsers(); track user.id) {
+              <div
+                class="invite-item"
+                [class.invite-item--selected]="isUserSelected(user.id)"
+                (click)="toggleUser(user.id)"
+              >
+                <mat-checkbox
+                  [checked]="isUserSelected(user.id)"
+                  (click)="$event.stopPropagation()"
+                  (change)="toggleUser(user.id)"
+                  aria-label="{{ user.firstName }} {{ user.lastName }}"
+                />
+                <div class="invite-item__info">
+                  <span class="invite-item__name">{{ user.firstName }} {{ user.lastName }}</span>
+                  <span class="invite-item__email">{{ user.email }}</span>
+                  @if (user.membershipId) {
+                    <span class="invite-item__socio">Socio #{{ user.membershipId }}</span>
+                  }
+                </div>
+              </div>
+            }
+            @empty {
+              <p class="step-hint">No se encontraron socios.</p>
+            }
+          </div>
+        }
+      }
+
+      @if (submitError()) {
+        <div class="step-error" role="alert">
+          <mat-icon>error_outline</mat-icon>
+          {{ submitError() }}
+        </div>
+      }
+
+      <div class="step-actions">
+        <button mat-button matStepperPrevious type="button">Anterior</button>
+        <button
+          mat-flat-button
+          type="button"
+          [disabled]="submitting()"
+          (click)="submit()"
+        >
+          @if (submitting()) {
+            <mat-spinner diameter="20" />
+          } @else {
+            <mat-icon>check</mat-icon>
+          }
+          Confirmar reserva
+        </button>
+      </div>
+
+    </mat-step>
+
+  </mat-stepper>
+
+</div>

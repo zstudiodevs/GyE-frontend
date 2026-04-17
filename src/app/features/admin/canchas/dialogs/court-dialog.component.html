@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>{{ isEditing ? 'Editar cancha' : 'Nueva cancha' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" class="dialog-field">
+      <mat-label>Dirección</mat-label>
+      <input
+        matInput
+        formControlName="address"
+        placeholder="Ej: Cancha Principal — Av. Urquiza 1234"
+        maxlength="200"
+        autocomplete="off"
+      >
+      <mat-error>
+        @if (form.controls.address.hasError('required')) {
+          La dirección es obligatoria
+        } @else if (form.controls.address.hasError('maxlength')) {
+          Máximo 200 caracteres
+        }
+      </mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancel()">Cancelar</button>
+    <button mat-flat-button type="submit" [disabled]="form.invalid">
+      {{ isEditing ? 'Guardar' : 'Crear' }}
+    </button>
+  </mat-dialog-actions>
+</form>

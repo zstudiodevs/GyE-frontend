@@ -1,0 +1,178 @@
+<div class="mis-turnos">
+
+  <div class="mis-turnos__header">
+    <h1 class="mis-turnos__title">Mis turnos</h1>
+    <button mat-flat-button class="mis-turnos__new-btn" (click)="navigateToNueva()">
+      <mat-icon>add</mat-icon>
+      Nueva reserva
+    </button>
+  </div>
+
+  <!-- Cargando -->
+  @if (loading()) {
+    <div class="mis-turnos__loading">
+      <mat-spinner diameter="40" />
+    </div>
+  }
+
+  <!-- Error -->
+  @if (!loading() && errorMessage()) {
+    <div class="mis-turnos__error" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ errorMessage() }}</span>
+      <button mat-button (click)="loadMyBookings()">Reintentar</button>
+    </div>
+  }
+
+  <!-- Contenido -->
+  @if (!loading() && !errorMessage()) {
+    <mat-tab-group animationDuration="200ms" class="mis-turnos__tabs">
+
+      <!-- ── Próximos ─────────────────────────────────────────────────── -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>event_upcoming</mat-icon>
+          <span>Próximos</span>
+          @if (upcoming().length > 0) {
+            <span class="tab-badge">{{ upcoming().length }}</span>
+          }
+        </ng-template>
+
+        @if (upcoming().length === 0) {
+          <div class="mis-turnos__empty">
+            <mat-icon>event_available</mat-icon>
+            <p>No tenés turnos próximos.</p>
+            <button mat-flat-button (click)="navigateToNueva()">Reservar ahora</button>
+          </div>
+        } @else {
+          <div class="turnos-list">
+            @for (booking of upcoming(); track booking.id) {
+              <ng-container *ngTemplateOutlet="bookingCard; context: { $implicit: booking }" />
+            }
+          </div>
+        }
+      </mat-tab>
+
+      <!-- ── Pasados ──────────────────────────────────────────────────── -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>history</mat-icon>
+          <span>Pasados</span>
+        </ng-template>
+
+        @if (past().length === 0) {
+          <div class="mis-turnos__empty">
+            <mat-icon>history_toggle_off</mat-icon>
+            <p>No hay turnos en el historial.</p>
+          </div>
+        } @else {
+          <div class="turnos-list">
+            @for (booking of past(); track booking.id) {
+              <ng-container *ngTemplateOutlet="bookingCard; context: { $implicit: booking }" />
+            }
+          </div>
+        }
+      </mat-tab>
+
+    </mat-tab-group>
+
+    @if (totalCount() > pageSize()) {
+      <mat-paginator
+        class="mis-turnos__paginator"
+        [length]="totalCount()"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageNumber() - 1"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="onPageChange($event)"
+        aria-label="Página de mis turnos"
+      />
+    }
+  }
+
+  <!-- FAB (mobile) -->
+  <button
+    mat-fab
+    class="mis-turnos__fab"
+    aria-label="Nueva reserva"
+    matTooltip="Nueva reserva"
+    (click)="navigateToNueva()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+
+</div>
+
+<!-- ── Template reutilizable de card ──────────────────────────────────────── -->
+<ng-template #bookingCard let-booking>
+  <mat-card
+    class="turno-card"
+    [class.turno-card--creator]="isCreator(booking)"
+    [class.turno-card--cancelled]="booking.status === BookingStatus.Cancelled"
+  >
+    <mat-card-content>
+
+      <div class="turno-card__header">
+        <mat-icon class="turno-card__icon">sports_tennis</mat-icon>
+        <div class="turno-card__info">
+          <span class="turno-card__address">{{ booking.courtAddress }}</span>
+          <span class="turno-card__datetime">
+            {{ booking.date | date:'EEEE d/M/yyyy' : undefined : 'es-AR' }}
+            &mdash; {{ booking.startTime.substring(0, 5) }} a {{ booking.endTime.substring(0, 5) }}
+          </span>
+        </div>
+        @if (isCreator(booking)) {
+          <mat-icon class="turno-card__creator-badge" matTooltip="Sos el organizador">
+            star
+          </mat-icon>
+        }
+      </div>
+
+      <div class="turno-card__meta">
+        <mat-chip-set>
+          <mat-chip class="chip--visibility">{{ visibilityLabel(booking.visibility) }}</mat-chip>
+          <mat-chip [class]="'chip--status chip--status-' + booking.status">
+            {{ statusLabel(booking.status) }}
+          </mat-chip>
+        </mat-chip-set>
+        <span class="turno-card__players">
+          <mat-icon>group</mat-icon>
+          {{ booking.confirmedPlayersCount }} confirmados
+        </span>
+      </div>
+
+      @if (canCancel(booking) || canAbandon(booking)) {
+        <div class="turno-card__actions">
+          @if (canCancel(booking)) {
+            <button
+              mat-stroked-button
+              [disabled]="cancellingId() === booking.id"
+              (click)="onCancel(booking)"
+            >
+              @if (cancellingId() === booking.id) {
+                <mat-spinner diameter="16" />
+              } @else {
+                <mat-icon>cancel</mat-icon>
+              }
+              Cancelar
+            </button>
+          }
+          @if (canAbandon(booking)) {
+            <button
+              mat-stroked-button
+              [disabled]="abandoningId() === booking.id"
+              (click)="onAbandon(booking)"
+            >
+              @if (abandoningId() === booking.id) {
+                <mat-spinner diameter="16" />
+              } @else {
+                <mat-icon>logout</mat-icon>
+              }
+              Abandonar
+            </button>
+          }
+        </div>
+      }
+
+    </mat-card-content>
+  </mat-card>
+</ng-template>
